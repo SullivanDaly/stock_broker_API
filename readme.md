@@ -22,8 +22,8 @@ or
 Follow these steps to get your development environment running:
 
 - **Clone the Repository**
-git clone https://github.com/yourusername/stock-trading-platform.git
-cd stock-trading-platform
+git clone https://github.com/SullivanDaly/stock_broker_API.git
+cd stock_broker_API
 
 ### With Docker
 1. **Build the Docker image**
