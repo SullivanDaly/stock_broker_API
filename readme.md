@@ -132,3 +132,107 @@ To run the automated tests for this system:
   ```
   python manage.py test
   ```
+
+## Views and Endpoints
+
+This section explains the various views available in the application and how to interact with them. Our application provides RESTful endpoints for investors and admins to perform various operations.
+
+### Authentication
+
+- **Investor/Admin Login**
+  - **Endpoint**: `broker_API/token/`
+  - **Method**: POST
+  - **Description**: Use this endpoint to authenticate as either an investor or an admin. It returns a JWT token for authenticated sessions.
+  - **Data Format**: 
+    ```json
+    {
+      "username": "your_username",
+      "password": "your_password"
+    }
+    ```
+  - **Response**: JWT Token
+  - **Example Value**: Investor: "amoore:password", Admin: "ijones:password"
+
+### Investor Operations
+
+Investors can buy and sell stocks and view their portfolios. They must include the JWT token in the Authorization header for authentication.
+
+- **Buy Stocks**
+  - **Endpoint**: `/stocks/buy/`
+  - **Method**: POST
+  - **Authorization**: JWT Token required
+  - **Description**: Allows investors to buy stocks. If the investor does not hold this type of stock already, a new portfolio is created; otherwise, the existing portfolio is modified.
+  - **Data Format**: 
+    ```json
+    {
+      "stock_name": "Wilson-Howard",
+      "quantity": 10
+    }
+    ```
+  - **Response**: Success or error message.
+
+- **Sell Stocks**
+  - **Endpoint**: `/stocks/sell/`
+  - **Method**: POST
+  - **Authorization**: JWT Token required
+  - **Description**: Allows investors to sell stocks. If the investor sells all their stock, the portfolio is deleted; otherwise, it is modified.
+  - **Data Format**: 
+    ```json
+    {
+      "stock_name": "Wilson-Howard",
+      "quantity": 5
+    }
+    ```
+  - **Response**: Success or error message.
+
+- **View Portfolio**
+  - **Endpoint**: `/investor/portfolio/`
+  - **Method**: GET
+  - **Authorization**: JWT Token required
+  - **Description**: Enables investors to view their current stock holdings.
+  - **Response**: List of stocks in the portfolio.
+
+### Admin Operations
+
+Admins can create, edit, or delete stocks in the system. Admin actions also require JWT token for authentication.
+
+- **Create New Stock**
+  - **Endpoint**: `/stocks/create/`
+  - **Method**: POST
+  - **Authorization**: JWT Token required
+  - **Description**: Allows admins to create new stock entries.
+  - **Data Format**: 
+    ```json
+    {
+      "name": "New Stock",
+      "ticker_symbol": "NS",
+      "description": "Description here",
+      "price": 100.50
+    }
+    ```
+  - **Response**: Details of the created stock or an error message.
+
+- **Edit Stock**
+  - **Endpoint**: `/stocks/edit/<name_or_symbol>/`
+  - **Method**: PUT
+  - **Authorization**: JWT Token required
+  - **Description**: Allows admins to edit existing stock details.
+  - **Data Format**: 
+    ```json
+    {
+      "name": "Updated Stock Name",
+      "description": "New description",
+      "price": 110.00
+    }
+    ```
+  - **Response**: Updated stock details or an error message.
+
+- **Delete Stock**
+  - **Endpoint**: `/stocks/delete/<name_or_symbol>/`
+  - **Method**: DELETE
+  - **Authorization**: JWT Token required
+  - **Description**: Allows admins to remove a stock from the database.
+  - **Response**: Success or error message.
+
+### Error Handling
+All endpoints return appropriate HTTP status codes and messages. In case of an error (like invalid credentials, insufficient permissions, or bad input data), the response will include a descriptive error message.
